@@ -77,7 +77,7 @@ public class FeatureTransformer {
         return MethodSpec.methodBuilder(methodName)
                 .addModifiers(Modifier.PUBLIC,Modifier.STATIC)
                 .returns(void.class)
-                .addAnnotation(this.buildGivenAnnotation())
+                .addAnnotation(this.buildGivenAnnotation(methodName))
                 .build();
     }
 
