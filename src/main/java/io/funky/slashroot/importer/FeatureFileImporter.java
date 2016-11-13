@@ -11,10 +11,6 @@ import java.util.ArrayList;
  */
 public class FeatureFileImporter {
 
-    public FeatureFileImporter() {
-
-    }
-
     public ArrayList<String> readFile(FileReader fileReader) throws IOException {
         ArrayList<String> lines = new ArrayList<String>();
         BufferedReader br = new BufferedReader(fileReader);

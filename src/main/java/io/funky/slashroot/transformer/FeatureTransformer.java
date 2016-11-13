@@ -9,6 +9,7 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 
 import javax.lang.model.element.Modifier;
+import java.io.File;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,7 +24,7 @@ public class FeatureTransformer {
     private ArrayList<String> classLines = new ArrayList<String>();
     private ArrayList<String> methodLines = new ArrayList<String>();
     private Map<String, ArrayList> importedFile = new HashMap<String, ArrayList>();
-    private JavaFile sourceFile;
+    private File sourceFile;
 
     public FeatureTransformer() {}
 
@@ -67,17 +68,15 @@ public class FeatureTransformer {
                     .replaceAll("\"(.*)\"","\"(.*)\"");
             switch (gherkinKeyword) {
                 case "Given":
-                    System.out.println(this.buildGivenMethod(methodName, annotationName));
+                    new GlueMethod(GlueType.GIVEN,methodName,annotationName);
                     break;
                 case "When":
-                    System.out.println(this.buildWhenMethod(methodName, annotationName));
+                    new GlueMethod(GlueType.WHEN,methodName,annotationName);
                     break;
                 case "Then":
-                    System.out.println(this.buildThenMethod(methodName, annotationName));
+                    new GlueMethod(GlueType.THEN,methodName,annotationName);
                     break;
             }
-
-            System.out.println("Keyword: " + gherkinKeyword + "\n" + "methodName: " + methodName + "\n" + "annotationName: " + annotationName);
         }
 
 
@@ -87,55 +86,5 @@ public class FeatureTransformer {
         else {
             System.out.println(clazzLines.get(0).replace("Feature:","").toLowerCase().trim().replace(" ","_"));
         }
-
-    }
-
-    private MethodSpec buildGivenMethod(String methodName, String annotationName) {
-        return MethodSpec.methodBuilder(methodName)
-                .addModifiers(Modifier.PUBLIC,Modifier.STATIC)
-                .returns(void.class)
-                .addAnnotation(this.buildGivenAnnotation(annotationName))
-                .build();
-    }
-
-    private MethodSpec buildWhenMethod(String methodName, String annotationName) {
-        return MethodSpec.methodBuilder(methodName)
-                .addModifiers(Modifier.PUBLIC,Modifier.STATIC)
-                .returns(void.class)
-                .addAnnotation(this.buildWhenAnnotation(annotationName))
-                .build();
-    }
-
-    private MethodSpec buildThenMethod(String methodName, String annotationName) {
-        return MethodSpec.methodBuilder(methodName)
-                .addModifiers(Modifier.PUBLIC,Modifier.STATIC)
-                .returns(void.class)
-                .addAnnotation(this.buildThenAnnotation(annotationName))
-                .build();
-    }
-
-    private AnnotationSpec buildGivenAnnotation(String annotationName) {
-        String value = annotationName.trim();
-        System.out.println(value);
-
-        return AnnotationSpec.builder(Given.class)
-                .addMember("value","$S",value)
-                .build();
-    }
-
-    private AnnotationSpec buildWhenAnnotation(String annotationName) {
-        String value = annotationName.trim();
-
-        return AnnotationSpec.builder(When.class)
-                .addMember("value","$S",value)
-                .build();
-    }
-
-    private AnnotationSpec buildThenAnnotation(String annotationName) {
-        String value = annotationName.trim();
-
-        return AnnotationSpec.builder(Then.class)
-                .addMember("value","$S",value)
-                .build();
     }
 }
