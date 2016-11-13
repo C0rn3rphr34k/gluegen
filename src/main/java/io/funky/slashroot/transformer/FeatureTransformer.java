@@ -55,12 +55,29 @@ public class FeatureTransformer {
         ArrayList<MethodSpec> gcMethods = new ArrayList<MethodSpec>();
 
         for (String method : methodz) {
+
             String gherkinKeyword = method.substring(0,method.indexOf(" "));
-            String methodName, annotationName;
+            String methodName = method.substring(method.indexOf(" "))
+                    .trim()
+                    .toLowerCase()
+                    .replaceAll("(\\s*)\"(.*)\"(\\s*)", "_")
+                    .replaceAll(" ","_");
+            String annotationName = method.substring(method.indexOf(" "))
+                    .trim()
+                    .replaceAll("\"(.*)\"","\"(.*)\"");
             switch (gherkinKeyword) {
                 case "Given":
-
+                    System.out.println(this.buildGivenMethod(methodName, annotationName));
+                    break;
+                case "When":
+                    System.out.println(this.buildWhenMethod(methodName, annotationName));
+                    break;
+                case "Then":
+                    System.out.println(this.buildThenMethod(methodName, annotationName));
+                    break;
             }
+
+            System.out.println("Keyword: " + gherkinKeyword + "\n" + "methodName: " + methodName + "\n" + "annotationName: " + annotationName);
         }
 
 
@@ -73,16 +90,33 @@ public class FeatureTransformer {
 
     }
 
-    private MethodSpec buildGivenMethod(String methodName) {
+    private MethodSpec buildGivenMethod(String methodName, String annotationName) {
         return MethodSpec.methodBuilder(methodName)
                 .addModifiers(Modifier.PUBLIC,Modifier.STATIC)
                 .returns(void.class)
-                .addAnnotation(this.buildGivenAnnotation())
+                .addAnnotation(this.buildGivenAnnotation(annotationName))
+                .build();
+    }
+
+    private MethodSpec buildWhenMethod(String methodName, String annotationName) {
+        return MethodSpec.methodBuilder(methodName)
+                .addModifiers(Modifier.PUBLIC,Modifier.STATIC)
+                .returns(void.class)
+                .addAnnotation(this.buildWhenAnnotation(annotationName))
+                .build();
+    }
+
+    private MethodSpec buildThenMethod(String methodName, String annotationName) {
+        return MethodSpec.methodBuilder(methodName)
+                .addModifiers(Modifier.PUBLIC,Modifier.STATIC)
+                .returns(void.class)
+                .addAnnotation(this.buildThenAnnotation(annotationName))
                 .build();
     }
 
     private AnnotationSpec buildGivenAnnotation(String annotationName) {
         String value = annotationName.trim();
+        System.out.println(value);
 
         return AnnotationSpec.builder(Given.class)
                 .addMember("value","$S",value)
