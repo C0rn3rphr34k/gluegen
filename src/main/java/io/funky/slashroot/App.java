@@ -8,13 +8,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-/**
- * Hello world!
- *
- */
 public class App 
 {
-    public static void main( String[] args ) throws FileNotFoundException {
+    public static void main( String[] args ){
         String path = "";
 
         System.out.println("This is gcgen v1.0! Copyright by slashroot.");
@@ -32,6 +28,7 @@ public class App
 
         if (path.isEmpty()){
             path = "/home/slashroot/IdeaProjects/gcgen/src/main/java/io/funky/slashroot/test.feature";
+            System.out.println("Usage: java -jar gcgen.jar -f path/to/file");
             System.out.println("Didn't find an explicit file parameter, using: " + path);
         }
 
