@@ -2,51 +2,63 @@ package io.funky.slashroot;
 
 import io.funky.slashroot.importer.FeatureFileImporter;
 import io.funky.slashroot.transformer.FeatureTransformer;
+import io.funky.slashroot.transformer.GlueClass;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class App 
 {
     public static void main( String[] args ){
-        String path = "";
+        File path = null;
+        String packageName = null;
 
-        System.out.println("This is gcgen v1.0! Copyright by slashroot.");
-        System.out.println(System.lineSeparator());
-
+        System.out.println("This is gcgen v1.0!\nThe experimental Glue Code Generator for Cucumber for Java.\nCopyright by slashroot.");
+        System.out.println("");
         for (int i = 0; i < args.length; i++){
             switch (args[i]){
                 case "-f":
-                    path = args[i+1];
-                    System.out.println("Found command line parameter: " + path);
+                    path = new File(args[i+1]);
+                    System.out.println("Found command line parameter: " + path.toString());
+                    i++;
+                    break;
+                case "-p":
+                    packageName = args[i+1];
+                    System.out.println("Found package name: " + packageName);
                     i++;
                     break;
             }
         }
 
-        if (path.isEmpty()){
-            path = "/home/slashroot/IdeaProjects/gcgen/src/main/java/io/funky/slashroot/test.feature";
+        if (path==null){
+            path = new File("/home/slashroot/IdeaProjects/gcgen/feature_Files/");
             System.out.println("Usage: java -jar gcgen.jar -f path/to/file");
-            System.out.println("Didn't find an explicit file parameter, using: " + path);
+            System.out.println("Didn't find an explicit file parameter, using: " + path.toString());
         }
 
         try {
             FeatureFileImporter importer = new FeatureFileImporter();
-            FileReader fileReader = new FileReader(path);
-            ArrayList<String> lines = importer.readFile(fileReader);
+            Map<String, List<String>> readfiles = importer.readFile(path);
 
-            for (String line : lines) {
-                System.out.println(line);
+            FeatureTransformer transformer = new FeatureTransformer(readfiles);
+            List<GlueClass> finalClasses = transformer.transform();
+
+            for (GlueClass clazz : finalClasses) {
+                clazz.writeClass();
             }
 
-            FeatureTransformer transformer = new FeatureTransformer();
-            transformer.transformSplitedLines(transformer.splitLines(lines));
-
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found in path");
-            e.printStackTrace();
+//            for (String line : readfiles.keySet()) {
+//                List<String> currentFileLines = readfiles.get(line);
+//                System.out.println("==============================");
+//                for (String currentLine : currentFileLines) {
+//                    System.out.println(currentLine);
+//                }
+//            }
         } catch (IOException e) {
             System.out.println("Could not open file for reading!");
             e.printStackTrace();
