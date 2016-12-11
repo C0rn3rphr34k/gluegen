@@ -62,6 +62,8 @@ public class GlueMethod {
 
         AnnotationSpec annotationSpec = null;
 
+        annotationName = "^" + annotationName + "$";
+
         switch (annotationType){
             case GIVEN:
                 annotationSpec = AnnotationSpec.builder(Given.class)

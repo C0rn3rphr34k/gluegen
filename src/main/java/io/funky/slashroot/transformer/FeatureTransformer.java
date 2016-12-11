@@ -45,6 +45,7 @@ public class FeatureTransformer {
                         .replaceAll("Feature:","")
                         .replaceAll("Feature: ","")
                         .replaceAll(" ","")
+                        .replaceAll(",","_")
                         .toLowerCase());
             }
             else if (line.startsWith("Given") || line.startsWith("When") || line.startsWith("Then") || line.startsWith("And") || line.startsWith("But")) {
@@ -76,6 +77,7 @@ public class FeatureTransformer {
                     .toLowerCase()
                     .replaceAll("(\\s*)\"(.*)\"(\\s*)", "_")
                     .replaceAll(" ","_")
+                    .replaceAll(",","_")
                     .replaceAll("\\W","");
             String annotationName = method.substring(method.indexOf(" "))
                     .trim()
