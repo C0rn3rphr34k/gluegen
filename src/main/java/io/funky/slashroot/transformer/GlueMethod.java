@@ -14,6 +14,7 @@ import java.util.List;
 public class GlueMethod {
 
     private MethodSpec methodSpec;
+    private String methodName;
 
     public GlueMethod() {}
 
@@ -31,6 +32,8 @@ public class GlueMethod {
         } else {
             methodSpec = buildMethodWithoutParameter(type, methodName, annotationName);
         }
+
+        this.methodName = methodName;
     }
 
     private AnnotationSpec buildGivenAnnotation(String annotationName) {
@@ -130,4 +133,6 @@ public class GlueMethod {
     public MethodSpec getMethodSpec() {
         return methodSpec;
     }
+
+    public String getMethodName() { return methodName; }
 }

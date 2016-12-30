@@ -72,16 +72,21 @@ public class FeatureTransformer {
         for (String method : methodz) {
 
             String gherkinKeyword = method.substring(0,method.indexOf(" "));
-            String methodName = method.substring(method.indexOf(" "))
-                    .trim()
-                    .toLowerCase()
-                    .replaceAll("(\\s*)\"(.*)\"(\\s*)", "_")
-                    .replaceAll(" ","_")
-                    .replaceAll(",","_")
-                    .replaceAll("\\W","");
-            String annotationName = method.substring(method.indexOf(" "))
-                    .trim()
-                    .replaceAll("\"(.*)\"","\"(.*)\"");
+            String methodName = this.sanitizeMethodName(method);
+            String annotationName = this.replaceTestDataByRegexp(method);
+            Boolean methodExists = false;
+
+            for (GlueMethod existingMethod : gcMethods){
+                if (existingMethod.getMethodName().equals(methodName)){
+                    methodExists = true;
+                    break;
+                }
+            }
+
+            if (methodExists){
+                continue;
+            }
+
             switch (gherkinKeyword) {
                 case "Given" :
                     gcMethods.add(new GlueMethod(GlueType.GIVEN,methodName,annotationName));
@@ -110,5 +115,21 @@ public class FeatureTransformer {
             //            System.out.println(clazzLines.get(0).replace("Feature:","").toLowerCase().trim().replace(" ","_"));
         }
         return transformedClass;
+    }
+
+    private String sanitizeMethodName(String methodName){
+        return methodName.substring(methodName.indexOf(" "))
+                .trim()
+                .toLowerCase()
+                .replaceAll("(\\s*)\"(.*)\"(\\s*)", "_")
+                .replaceAll(" ","_")
+                .replaceAll("\\W","")
+                .trim();
+    }
+
+    private String replaceTestDataByRegexp(String annotationValue){
+        return annotationValue.substring(annotationValue.indexOf(" "))
+                .trim()
+                .replaceAll("\"(.*)\"","\"(.*)\"");
     }
 }

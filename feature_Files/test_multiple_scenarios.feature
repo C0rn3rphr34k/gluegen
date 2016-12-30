@@ -14,7 +14,7 @@ When the user clicks the logout button on the dashboard
 Then the user is presented with the login page
 
 Scenario: Deletion of a user account
-Given a a user "john" exists and is logged in
+Given a user "john" exists and is logged in
 When the user chooses to delete the account
 Then the user is required to enter the password
 And the user is presented with the login page
