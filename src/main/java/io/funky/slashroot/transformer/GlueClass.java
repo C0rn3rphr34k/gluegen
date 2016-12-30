@@ -20,12 +20,12 @@ public class GlueClass {
 
     public GlueClass() {}
 
-    public GlueClass(String filename){
-        if (filename==null || filename.isEmpty()){
+    public GlueClass(String className){
+        if (className==null || className.isEmpty()){
             System.out.println("Filename may not be empty!");
         } else {
-            this.filename = filename;
-            typeSpec = TypeSpec.classBuilder(filename)
+            this.filename = className;
+            typeSpec = TypeSpec.classBuilder(className)
                     .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                     .build();
         }
@@ -80,5 +80,24 @@ public class GlueClass {
                 .build();
 
         classFile.writeTo(System.out);
+    }
+
+    public void writeClass(File path) throws IOException{
+        List<MethodSpec> methodSpecs = new ArrayList<>();
+        for (GlueMethod method : methodz) {
+            methodSpecs.add(method.getMethodSpec());
+        }
+
+        typeSpec = TypeSpec.classBuilder(filename)
+                .addModifiers(Modifier.PUBLIC,Modifier.STATIC)
+                .addMethods(methodSpecs)
+                .build();
+
+        JavaFile classFile = JavaFile.builder("io.funky.slashroot.gcgen.generated",typeSpec)
+                .build();
+
+        FileWriter fw = new FileWriter(path + "/" + filename + ".java");
+        fw.write(classFile.toString());
+        fw.close();
     }
 }

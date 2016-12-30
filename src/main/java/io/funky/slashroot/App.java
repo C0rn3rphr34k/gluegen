@@ -17,6 +17,7 @@ public class App
     public static void main( String[] args ){
         File path = null;
         String packageName = null;
+        List<GlueClass> finalClasses;
 
         System.out.println("This is gcgen v1.0!\nThe experimental Glue Code Generator for Cucumber for Java.\nCopyright by slashroot.");
         System.out.println("");
@@ -46,10 +47,10 @@ public class App
             Map<String, List<String>> readfiles = importer.readFile(path);
 
             FeatureTransformer transformer = new FeatureTransformer(readfiles);
-            List<GlueClass> finalClasses = transformer.transform();
+            finalClasses = transformer.transform();
 
             for (GlueClass clazz : finalClasses) {
-                clazz.writeClass();
+                clazz.writeClass(path);
             }
 
 //            for (String line : readfiles.keySet()) {
