@@ -1,8 +1,5 @@
 package io.funky.slashroot.transformer;
 
-import com.squareup.javapoet.MethodSpec;
-
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
