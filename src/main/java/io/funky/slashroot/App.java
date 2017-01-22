@@ -16,7 +16,7 @@ public class App
         String packageName = null;
         List<GlueClass> finalClasses;
 
-        System.out.println("This is gcgen v1.0!\nThe experimental Glue Code Generator for Cucumber for Java.\nCopyright by slashroot.");
+        System.out.println("This is gluegen v1.0!\nThe experimental Glue Code Generator for Cucumber for Java.");
         System.out.println("");
         for (int i = 0; i < args.length; i++){
             switch (args[i]){
@@ -34,8 +34,8 @@ public class App
         }
 
         if (path==null){
-            path = new File("/home/slashroot/IdeaProjects/gcgen/feature_Files/");
-            System.out.println("Usage: java -jar gcgen.jar -f path/to/file");
+            path = new File("/Users/slashroot/IdeaProjects/gluegen/feature_Files/");
+            System.out.println("Usage: java -jar gluegen.jar -f path/to/file");
             System.out.println("Didn't find an explicit file parameter, using: " + path.toString());
         }
 
